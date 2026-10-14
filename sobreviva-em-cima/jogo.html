@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Floresta</title>
+  <link rel="stylesheet" href="jogo.css" />
+</head>
+<body>
+  <div class="lua"></div>
+
+  <h1 class="titulo">🌲 A Floresta 🌲</h1>
+
+  <div class="info">
+    <span>⭐ Pontos: <span id="pontos">0</span></span>
+  </div>
+
+  <div class="pista">
+    <div class="boneco monstro" id="monstro">
+      <span class="emoji" id="emojiMonstro">👻</span>
+    </div>
+
+    <div class="boneco jogador" id="jogador">
+      <span class="emoji">🏃</span>
+    </div>
+
+    <div class="tronco" id="tronco">🪵</div>
+  </div>
+
+  <p class="texto" id="texto"></p>
+
+  <button id="btnPular" class="btn-pular">⬆️ Pular</button>
+
+  <div class="game-over" id="gameOver" style="display:none">
+    <h2>💀 GAME OVER</h2>
+    <p id="msgGameOver">O monstro te pegou!</p>
+    <button onclick="reiniciar()">🔄 Jogar de novo</button>
+  </div>
+
+  <button id="btnVoltar" class="btn-voltar">⬅ Voltar ao criador</button>
+
+  <script src="jogo.js"></script>
+</body>
+</html>

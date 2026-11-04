@@ -68,7 +68,6 @@ body {
 
 .jogador {
   left: 40%;
-  transition: transform 0.25s ease;
 }
 
 .jogador .emoji {
@@ -76,7 +75,7 @@ body {
 }
 
 .jogador.pulando {
-  transform: translateY(-70px);
+  animation: pularAnim 0.5s ease;
 }
 
 .jogador.atingido .emoji {
@@ -90,7 +89,7 @@ body {
   filter: drop-shadow(0 0 15px #a00);
 }
 
-.tronco {
+.arvore {
   position: absolute;
   bottom: 20px;
   left: 100%;
@@ -140,6 +139,52 @@ body {
 }
 .btn-voltar:hover { background: #222; border-color: #888; }
 
+.explicacao {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  z-index: 20;
+  padding: 20px;
+  text-align: center;
+}
+
+.explicacao h2 {
+  font-size: 2.5rem;
+  color: #2ecc40;
+  text-shadow: 0 0 15px #0f5, 0 0 30px #0a0;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.explicacao p {
+  font-size: 1.1rem;
+  color: #ddd;
+  max-width: 500px;
+  line-height: 1.5;
+}
+
+.explicacao strong { color: #ffcc00; }
+
+.explicacao button {
+  margin-top: 20px;
+  padding: 14px 40px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  background: #cc0000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: 0.2s;
+}
+.explicacao button:hover { background: #ff2222; transform: scale(1.05); }
+
 .game-over {
   position: fixed;
   inset: 0;
@@ -182,6 +227,12 @@ body {
 @keyframes correr {
   from { transform: translateY(0); }
   to   { transform: translateY(-3px); }
+}
+
+@keyframes pularAnim {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-70px); }
+  100% { transform: translateY(0); }
 }
 
 @keyframes ameacar {

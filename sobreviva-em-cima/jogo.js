@@ -6,26 +6,28 @@ const emojis = {
 
 const elMonstro = document.getElementById('monstro');
 const elJogador = document.getElementById('jogador');
-const elTronco = document.getElementById('tronco');
+const elArvore = document.getElementById('arvore');
 const elEmojiMonstro = document.getElementById('emojiMonstro');
 const elTexto = document.getElementById('texto');
 const elPontos = document.getElementById('pontos');
 const elGameOver = document.getElementById('gameOver');
 const elMsgGameOver = document.getElementById('msgGameOver');
+const elExplicacao = document.getElementById('explicacao');
 const btnPular = document.getElementById('btnPular');
 const btnVoltar = document.getElementById('btnVoltar');
+const btnComecar = document.getElementById('btnComecar');
 
-let jogando = true;
+let jogando = false;
 let pulando = false;
 let posMonstro = 5;
-let posTronco = 100;
-let velTronco = 0.9;
-let velMonstro = 0.05;
+let posArvore = 100;
+let velArvore = 0.8;
+let velMonstro = 0.02;
 let pontos = 0;
-let troncoJaBateu = false;
+let arvoreJaBateu = false;
+let timerPulo = null;
 
 carregarMonstro();
-loop();
 
 function carregarMonstro() {
   const dados = localStorage.getItem('monstros');
@@ -34,39 +36,47 @@ function carregarMonstro() {
     if (personagens.length > 0) {
       const p = personagens[personagens.length - 1];
       elEmojiMonstro.textContent = emojis[p.tipo] || '👻';
-      elTexto.textContent = `${p.nome} (${p.tipo}) está te perseguindo! Pule os troncos!`;
+      elTexto.textContent = `${p.nome} (${p.tipo}) está te perseguindo! Pule as árvores!`;
       return;
     }
   }
-  elTexto.textContent = 'Pule os troncos para sobreviver!';
+  elTexto.textContent = 'Pule as árvores para sobreviver!';
 }
+
+btnComecar.addEventListener('click', function () {
+  elExplicacao.style.display = 'none';
+  jogando = true;
+  loop();
+});
 
 function pular() {
   if (!jogando || pulando) return;
   pulando = true;
   elJogador.classList.add('pulando');
-  setTimeout(function () {
+  if (timerPulo) clearTimeout(timerPulo);
+  timerPulo = setTimeout(function () {
     pulando = false;
     elJogador.classList.remove('pulando');
+    timerPulo = null;
   }, 500);
 }
 
 function loop() {
   if (!jogando) return;
 
-  posTronco -= velTronco;
-  elTronco.style.left = posTronco + '%';
+  posArvore -= velArvore;
+  elArvore.style.left = posArvore + '%';
 
   posMonstro += velMonstro;
   elMonstro.style.left = posMonstro + '%';
 
-  if (posTronco <= 45 && posTronco >= 35 && !troncoJaBateu) {
+  if (posArvore <= 45 && posArvore >= 35 && !arvoreJaBateu) {
     if (!pulando) {
-      troncoJaBateu = true;
+      arvoreJaBateu = true;
       jogando = false;
 
       elJogador.classList.add('atingido');
-      elTexto.textContent = '💥 Você bateu no tronco! O monstro está te alcançando...';
+      elTexto.textContent = '💥 Você bateu na árvore! O monstro está te alcançando...';
 
       const corridaFinal = setInterval(function () {
         posMonstro += 3;
@@ -81,12 +91,14 @@ function loop() {
     }
   }
 
-  if (posTronco < -10) {
-    posTronco = 100;
-    troncoJaBateu = false;
+  if (posArvore < -10) {
+    posArvore = 100;
+    arvoreJaBateu = false;
     pontos++;
     elPontos.textContent = pontos;
-    velTronco += 0.08;
+    if (velArvore < 1.6) {
+      velArvore += 0.03;
+    }
   }
 
   if (posMonstro >= 40) {
@@ -107,15 +119,20 @@ function reiniciar() {
   jogando = true;
   pulando = false;
   posMonstro = 5;
-  posTronco = 100;
-  velTronco = 0.9;
-  velMonstro = 0.05;
+  posArvore = 100;
+  velArvore = 0.8;
+  velMonstro = 0.02;
   pontos = 0;
-  troncoJaBateu = false;
+  arvoreJaBateu = false;
+
+  if (timerPulo) {
+    clearTimeout(timerPulo);
+    timerPulo = null;
+  }
 
   elPontos.textContent = 0;
   elMonstro.style.left = '5%';
-  elTronco.style.left = '100%';
+  elArvore.style.left = '100%';
   elGameOver.style.display = 'none';
   elJogador.classList.remove('atingido', 'pulando');
 

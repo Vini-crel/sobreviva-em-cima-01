@@ -17,6 +17,16 @@
 
     <select id="tipo" required>
       <option value="">-- Escolha o tipo --</option>
+      <option value="Zumbi">Zumbi</option>
+      <option value="Vampiro">Vampiro</option>
+      <option value="Lobisomem">Lobisomem</option>
+      <option value="Fantasma">Fantasma</option>
+      <option value="Bruxa">Bruxa</option>
+      <option value="Demônio">Demônio</option>
+      <option value="Múmia">Múmia</option>
+      <option value="Esqueleto">Esqueleto</option>
+      <option value="Palhaço">Palhaço</option>
+      <option value="Alienígena">Alienígena</option>
     </select>
 
     <input type="number" id="perigo" min="1" max="5" placeholder="Perigo (1-5)" required />
@@ -40,11 +50,6 @@
   <button id="btnJogar" class="btn-jogar" style="display:none">🌲 Ir para o jogo</button>
 
   <div id="listaPersonagens"></div>
-
-  <hr />
-
-  <h2 class="titulo-ranking">🏆 Ranking</h2>
-  <div id="ranking"></div>
 
   <script src="criador.js"></script>
 </body>

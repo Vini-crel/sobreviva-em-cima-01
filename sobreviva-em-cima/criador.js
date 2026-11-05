@@ -1,16 +1,3 @@
-const tipos = [
-  { id: 1,  nome: 'Zumbi' },
-  { id: 2,  nome: 'Vampiro' },
-  { id: 3,  nome: 'Lobisomem' },
-  { id: 4,  nome: 'Fantasma' },
-  { id: 5,  nome: 'Bruxa' },
-  { id: 6,  nome: 'Demônio' },
-  { id: 7,  nome: 'Múmia' },
-  { id: 8,  nome: 'Esqueleto' },
-  { id: 9,  nome: 'Palhaço' },
-  { id: 10, nome: 'Alienígena' }
-];
-
 let personagens = [];
 let editandoId = null;
 
@@ -25,21 +12,9 @@ const btnSalvar = document.getElementById('btnSalvar');
 const btnCancelar = document.getElementById('btnCancelar');
 const btnVoltar = document.getElementById('btnVoltar');
 const btnJogar = document.getElementById('btnJogar');
-const ranking = document.getElementById('ranking');
 
-preencherTipos();
 carregar();
 renderizar();
-
-function preencherTipos() {
-  tipos.forEach(function (t) {
-    const opt = document.createElement('option');
-    opt.value = t.id;
-    opt.textContent = t.nome;
-    campoTipo.appendChild(opt);
-  });
-  localStorage.setItem('tipos', JSON.stringify(tipos));
-}
 
 btnVoltar.addEventListener('click', function () {
   window.location.href = 'index.html';
@@ -63,19 +38,17 @@ form.addEventListener('submit', function (e) {
     return;
   }
 
-  const tipoId = parseInt(campoTipo.value);
-
   if (editandoId !== null) {
     const p = personagens.find(p => p.id === editandoId);
     p.nome = nome;
-    p.tipo_id = tipoId;
+    p.tipo = campoTipo.value;
     p.perigo = perigo;
     cancelarEdicao();
   } else {
     personagens.push({
       id: Date.now(),
       nome: nome,
-      tipo_id: tipoId,
+      tipo: campoTipo.value,
       perigo: perigo
     });
     form.reset();
@@ -97,27 +70,13 @@ function validarNome(nome) {
   return '';
 }
 
-function nomeDoTipo(tipoId) {
-  const t = tipos.find(t => t.id === tipoId);
-  return t ? t.nome : 'Desconhecido';
-}
-
 function salvar() {
   localStorage.setItem('monstros', JSON.stringify(personagens));
 }
 
 function carregar() {
   const dados = localStorage.getItem('monstros');
-  if (dados) {
-    personagens = JSON.parse(dados);
-    personagens.forEach(function (p) {
-      if (p.tipo && !p.tipo_id) {
-        const t = tipos.find(t => t.nome === p.tipo);
-        p.tipo_id = t ? t.id : 1;
-        delete p.tipo;
-      }
-    });
-  }
+  if (dados) personagens = JSON.parse(dados);
 }
 
 function excluir(id) {
@@ -131,7 +90,7 @@ function editar(id) {
   if (!p) return;
   editandoId = id;
   campoNome.value = p.nome;
-  campoTipo.value = p.tipo_id;
+  campoTipo.value = p.tipo;
   campoPerigo.value = p.perigo;
   aviso.textContent = '';
   btnSalvar.textContent = '💾 Salvar edição';
@@ -158,13 +117,13 @@ function limparTudo() {
 
 function renderizar() {
   lista.innerHTML = '';
-  personagens.forEach(function (p) {
+  personagens.forEach(p => {
     const div = document.createElement('div');
     div.className = 'card';
 
     const info = document.createElement('span');
     info.className = 'info';
-    info.innerHTML = `<strong>${p.nome}</strong> (${nomeDoTipo(p.tipo_id)}) — Perigo: ${p.perigo}/5`;
+    info.innerHTML = `<strong>${p.nome}</strong> (${p.tipo}) — Perigo: ${p.perigo}/5`;
 
     const botoes = document.createElement('div');
     botoes.className = 'botoes';
@@ -187,31 +146,4 @@ function renderizar() {
 
   contador.textContent = personagens.length;
   btnJogar.style.display = personagens.length > 0 ? 'block' : 'none';
-
-  renderizarRanking();
-}
-
-function renderizarRanking() {
-  const partidas = JSON.parse(localStorage.getItem('partidas')) || [];
-  ranking.innerHTML = '';
-
-  if (partidas.length === 0) {
-    ranking.innerHTML = '<p class="sem-ranking">Nenhuma partida jogada ainda.</p>';
-    return;
-  }
-
-  const top5 = partidas.slice().sort((a, b) => b.pontos - a.pontos).slice(0, 5);
-
-  top5.forEach(function (partida, i) {
-    const m = personagens.find(m => m.id === partida.monstro_id);
-    if (!m) return;
-
-    const linha = document.createElement('div');
-    linha.className = 'linha-ranking';
-    linha.innerHTML = `
-      <span><span class="pos">${i + 1}º</span> <strong>${m.nome}</strong> (${nomeDoTipo(m.tipo_id)})</span>
-      <span>${partida.pontos} pts</span>
-    `;
-    ranking.appendChild(linha);
-  });
 }

@@ -1,3 +1,16 @@
+const tipos = [
+  { id: 1,  nome: 'Zumbi' },
+  { id: 2,  nome: 'Vampiro' },
+  { id: 3,  nome: 'Lobisomem' },
+  { id: 4,  nome: 'Fantasma' },
+  { id: 5,  nome: 'Bruxa' },
+  { id: 6,  nome: 'Demônio' },
+  { id: 7,  nome: 'Múmia' },
+  { id: 8,  nome: 'Esqueleto' },
+  { id: 9,  nome: 'Palhaço' },
+  { id: 10, nome: 'Alienígena' }
+];
+
 const emojis = {
   'Zumbi': '🧟', 'Vampiro': '🧛', 'Lobisomem': '🐺',
   'Fantasma': '👻', 'Bruxa': '🧙', 'Demônio': '😈',
@@ -26,6 +39,7 @@ let velMonstro = 0.02;
 let pontos = 0;
 let arvoreJaBateu = false;
 let timerPulo = null;
+let monstroAtualId = null;
 
 carregarMonstro();
 
@@ -35,8 +49,13 @@ function carregarMonstro() {
     const personagens = JSON.parse(dados);
     if (personagens.length > 0) {
       const p = personagens[personagens.length - 1];
-      elEmojiMonstro.textContent = emojis[p.tipo] || '👻';
-      elTexto.textContent = `${p.nome} (${p.tipo}) está te perseguindo! Pule as árvores!`;
+      monstroAtualId = p.id;
+
+      const tipo = tipos.find(t => t.id === p.tipo_id);
+      const tipoNome = tipo ? tipo.nome : 'Desconhecido';
+
+      elEmojiMonstro.textContent = emojis[tipoNome] || '👻';
+      elTexto.textContent = `${p.nome} (${tipoNome}) está te perseguindo! Pule as árvores!`;
       return;
     }
   }
@@ -113,6 +132,22 @@ function terminarJogo() {
   jogando = false;
   elMsgGameOver.textContent = `O monstro te pegou! Pontos: ${pontos}`;
   elGameOver.style.display = 'flex';
+  salvarPartida(pontos);
+}
+
+function salvarPartida(pontosFinais) {
+  if (monstroAtualId === null) return;
+
+  const partidas = JSON.parse(localStorage.getItem('partidas')) || [];
+
+  partidas.push({
+    id: Date.now(),
+    monstro_id: monstroAtualId,
+    pontos: pontosFinais,
+    data: new Date().toISOString().split('T')[0]
+  });
+
+  localStorage.setItem('partidas', JSON.stringify(partidas));
 }
 
 function reiniciar() {

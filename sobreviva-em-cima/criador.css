@@ -112,3 +112,39 @@ hr { border-color: #444; margin: 20px 0; }
   box-shadow: 0 0 25px rgba(46, 204, 64, 0.7);
   color: #fff;
 }
+
+.titulo-ranking {
+  color: #ffcc00;
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
+}
+
+#ranking {
+  background: #222;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.linha-ranking {
+  padding: 8px 10px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+.linha-ranking:last-child { border-bottom: none; }
+
+.linha-ranking .pos {
+  color: #ffcc00;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.sem-ranking {
+  color: #888;
+  font-style: italic;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 10px;
+}
